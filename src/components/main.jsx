@@ -1,21 +1,28 @@
 import React, { useState } from 'react'
 import Die from '../components/die';
+import { nanoid } from "nanoid";
 
     const Main = () => {
         const [dice, setDice] = useState(allNewDice())
 
         function allNewDice() {
-          const array = Array(10) // array size is 10
-            .fill()
-            .map(() => Math.ceil(6 * Math.random())); // numbers from 1-6 (exclusive)
-        return array
+            const newDice = [];
+            for (let i = 0; i < 10; i++) {
+                newDice.push({
+                    value: Math.ceil(Math.random() * 6),
+                    isHeld: true,
+                    id: nanoid()
+                });
+            }
+            return newDice;
         }
 
-            function refreshPage() {
-            window.location.reload(false);
-            }
+
+        function rollDice() {
+            setDice(allNewDice());
+        }
         
-        const diceElements = dice.map(die => <Die value={die} />)
+        const diceElements = dice.map(die => <Die key={die.id} value={die.value} isHeld={die.isHeld} />)
 
     return (
     <div className="main">
@@ -28,7 +35,7 @@ import Die from '../components/die';
         <div className="container">
             {diceElements}
         </div>
-            <button onClick={refreshPage} className='roll'>
+            <button onClick={rollDice} className='roll'>
                 Roll
             </button>
     </div>
